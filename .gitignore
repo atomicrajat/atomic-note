@@ -1,0 +1,21 @@
+# Build output
+.build/
+build/
+*.bin
+*.elf
+*.map
+
+# Secrets — never commit credentials
+secrets.h
+firmware/atomic_note/secrets.h
+
+# macOS
+.DS_Store
+
+# Python bytecode from the companion service
+__pycache__/
+*.pyc
+
+# Logs & temp files
+*.log
+*.tmp
