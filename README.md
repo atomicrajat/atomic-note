@@ -1,6 +1,6 @@
 # Atomic Note 🎙️ Display-First E-Paper Voice & Knowledge Companion
 
-![Atomic Note Device](docs/atomic_note.jpg)
+<img src="docs/atomic_note.jpg" width="480" alt="Atomic Note Device">
 
 **Atomic Note** is an open-source, voice-first, distraction-free pocket companion built on an **ESP32-S3 with a 1.54" e-paper display (200×200)**, an **ES8311 audio codec**, an **SD card module**, a **hardware RTC**, and onboard environment sensors.
 
