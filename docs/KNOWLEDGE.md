@@ -386,10 +386,11 @@ Separate on purpose: an expense needs a real number column for Notion to sum
 and chart, and a notes table with a mostly-empty Amount on it is a worse
 version of both. Either can be configured without the other.
 
-**Atomic Note** sits at the top level rather than under **AtomicRajat**. It deliberately sits on its own rather than under **AtomicRajat**:
-that page is the content source for `atomicrajat.com`, so a voice note landing
-inside it would be sitting among live website content, and anything shared
-from that page would take the notes with it.
+Put both at the **top level** of your sidebar rather than under an existing
+page. Anything shared from a parent page takes its children with it, so a
+database nested under something you later publish takes your notes public with
+it — and voice notes contain names, work details and whatever you happened to
+say out loud.
 
 | Property | Type | |
 |---|---|---|
@@ -432,7 +433,7 @@ Everything has a working default; these are the ones worth knowing.
 
 | Variable | Default | What it does |
 |---|---|---|
-| `ATOMIC_VAULT` | `~/atomicrajat` | Vault to write into |
+| `ATOMIC_VAULT` | `~/AtomicNote` | Vault to write into |
 | `ATOMIC_VAULT_ROOT` | `Atomic Note` | Folder inside it |
 | `ATOMIC_VAULT_READ` | — | Extra vaults to *search*, comma separated |
 | `ATOMIC_MODEL` | `distil-large-v3` | Speech-to-text |

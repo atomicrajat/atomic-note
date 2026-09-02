@@ -139,10 +139,12 @@ void begin() {
   speakOn = prefs.getBool("speak", false);
   battTest = prefs.getBool("batttest", false);
   bestScore = prefs.getInt("best", 0);
+  // Empty until it is set in the web app. A default cannot be right here —
+  // the companion runs on whatever machine the owner uses, on whatever address
+  // their network hands it — and a wrong one is worse than none, because the
+  // device then fails by timing out against a stranger's LAN rather than
+  // saying it has nowhere to send anything.
   companion = prefs.getString("companion", "");
-  if (companion.length() == 0) {
-    companion = "http://192.168.1.61:8710";
-  }
   autoSyncOn = prefs.getBool("autosync", true);
   expenseBudgetVal = prefs.getInt("budget", 10000);
 

@@ -41,7 +41,7 @@ import llm
 
 # The vault to write into. Everything the device produces lands under one
 # folder inside it, so an existing vault is never scribbled on.
-VAULT = os.path.expanduser(os.environ.get("ATOMIC_VAULT", "~/atomicrajat"))
+VAULT = os.path.expanduser(os.environ.get("ATOMIC_VAULT", "~/AtomicNote"))
 ROOT = os.environ.get("ATOMIC_VAULT_ROOT", "Atomic Note")
 
 # Extra vaults to READ during retrieval. The device writes to exactly one

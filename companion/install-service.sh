@@ -90,7 +90,7 @@ cat > "$PLIST" <<PLIST_EOF
 
     <!-- Knowledge base. Notes are written under "Atomic Note/" inside this
          vault; nothing else in it is touched. -->
-    <key>ATOMIC_VAULT</key><string>${ATOMIC_VAULT:-$HOME/atomicrajat}</string>
+    <key>ATOMIC_VAULT</key><string>${ATOMIC_VAULT:-$HOME/AtomicNote}</string>
     <key>ATOMIC_VAULT_ROOT</key><string>${ATOMIC_VAULT_ROOT:-Atomic Note}</string>
 
     <!-- Extra vaults to SEARCH but never write to, comma separated. -->

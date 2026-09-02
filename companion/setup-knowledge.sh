@@ -17,7 +17,7 @@ set -euo pipefail
 CHECK_ONLY=false
 [[ "${1:-}" == "--check" ]] && CHECK_ONLY=true
 
-VAULT="${ATOMIC_VAULT:-$HOME/atomicrajat}"
+VAULT="${ATOMIC_VAULT:-$HOME/AtomicNote}"
 VAULT_ROOT="${ATOMIC_VAULT_ROOT:-Atomic Note}"
 
 # Models are ranked in llm.py; these are the two worth having on a machine with

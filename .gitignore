@@ -9,13 +9,17 @@ build/
 secrets.h
 firmware/atomic_note/secrets.h
 
-# macOS
-.DS_Store
+# Companion runtime state lives in $HOME, not here, but be explicit
+*.jsonl
+sync-state.json
 
 # Python bytecode from the companion service
 __pycache__/
 *.pyc
 
-# Logs & temp files
-*.log
-*.tmp
+# Reference material and scratch work, kept locally and never published
+027*/
+scratch/
+
+# macOS
+.DS_Store

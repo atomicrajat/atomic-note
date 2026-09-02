@@ -15,11 +15,12 @@ struct Link {
   const char* url;
 };
 
+// Seeded into NVS on first boot and owned by the user afterwards — edit them
+// in the web app rather than here. These are only what a freshly flashed
+// device shows before anyone has set their own.
 constexpr Link kLinks[] = {
-    {"GitHub", "https://github.com/atomicrajat"},
-    {"Website", "https://atomicrajat.in"},
-    {"LinkedIn", "https://www.linkedin.com/in/rajatmr/"},
-    {"TannaTechBiz", "https://tannatechbiz.com"},
+    {"Project", "https://github.com/atomicrajat/atomic-note"},
+    {"Docs", "https://github.com/atomicrajat/atomic-note/tree/main/docs"},
 };
 constexpr int kLinkCount = sizeof(kLinks) / sizeof(kLinks[0]);
 
