@@ -1,4 +1,4 @@
-# Atomic Note 🎙️ Display-First E-Paper Voice & Knowledge Companion
+# Atomic Note: E-Paper Voice & Knowledge Companion
 
 <img src="docs/atomic_note.jpg" width="480" alt="Atomic Note Device">
 
@@ -27,12 +27,23 @@ Hold a button, speak a thought or expense, and Atomic Note automatically structu
 - **Exact Ledger Arithmetic**: Expense aggregates are precomputed by python companion logic so the model never makes math errors.
 - **Neural TTS Output**: Answers are read out loud using **Kokoro-82M** high-quality neural voice synthesis and rendered as formatted text on the e-paper screen.
 
+### 🛠️ Hardware Utility Apps
+- **🎲 Motion-Driven Dice App**: Shake the device to roll a digital die using the MPU6050/IMU accelerometer.
+- **📏 Laser Tape Measure App**: Real-time distance measurement using the **VL53L0X Time-of-Flight (ToF)** laser sensor. Features live distance tracking, multi-unit conversion (mm, cm, inches, feet), and a freeze-reading mode.
+
 ### 🌐 Built-in Web Portal (Port 80)
 - Hosted directly on the ESP32 device (`http://<device-ip>`).
 - Manage tasks, toggle completion, set reminders, view note transcripts, configure Wi-Fi credentials, and set companion endpoints without cloud dependencies.
 
 ### 🔌 Add-On Sensor Detection
 - Auto-probes I2C bus on startup for additional modular sensors (MPU6050/ADXL345 accelerometers, HMC5883 compass, VL53L0X distance sensor, APDS9960 gesture sensor, BME280 environment sensor).
+
+---
+
+## 🔮 Future Scope
+
+- **📦 Custom 3D-Printed Enclosure**: A durable, compact 3D-printed case designed for daily pocket carry (EDC).
+- **🧲 Magnetic Snap-On Sensor Modules**: Modular magnetic connector system to hot-swap external sensors (laser distance, environment, compass, gesture) instantly without breadboards or wiring.
 
 ---
 
