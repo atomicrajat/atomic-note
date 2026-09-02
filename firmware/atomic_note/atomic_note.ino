@@ -140,6 +140,47 @@ const ui::MenuEntry kMenuEntries[] = {
 ui::Menu menuScreen("Menu", kMenuEntries,
                     sizeof(kMenuEntries) / sizeof(kMenuEntries[0]));
 
+// Every screen the console can open by name, for `screen <name>` and the
+// screenshot tool. Separate from the menu tables because it also has to reach
+// screens the menu never shows — the dashboard is the root, and Record is only
+// reachable by holding a button.
+struct NamedScreen {
+  const char* name;
+  ui::Screen* screen;
+};
+
+const NamedScreen kNamedScreens[] = {
+    {"dashboard", &dashboardScreen}, {"menu", &menuScreen},
+    {"notes", &noteTagsScreen},      {"sync", &syncScreen},
+    {"agenda", &agendaScreen},       {"ask", &askScreen},
+    {"apps", &appsScreen},           {"dice", &diceScreen},
+    {"measure", &measureScreen},     {"timer", &pomodoroScreen},
+    {"banner", &statusBannerScreen}, {"links", &qrCodesScreen},
+    {"tasks", &taskListScreen},      {"calendar", &calendarScreen},
+    {"expenses", &expenseScreen},    {"usage", &usageScreen},
+    {"wifi", &networkScreen},        {"settings", &settingsScreen},
+    {"buttons", &helpScreen},        {"record", &recordScreen},
+};
+
+bool openScreenByName(const char* name) {
+  if (name == nullptr) {
+    Serial.print("screens:");
+    for (const NamedScreen& entry : kNamedScreens) {
+      Serial.printf(" %s", entry.name);
+    }
+    Serial.println();
+    return true;
+  }
+  for (const NamedScreen& entry : kNamedScreens) {
+    if (strcmp(entry.name, name) == 0) {
+      router.go(entry.screen);
+      Serial.printf("opened %s\n", entry.name);
+      return true;
+    }
+  }
+  return false;
+}
+
 // Draw a bare message straight to the panel, for failures that happen before
 // the Router exists.
 void fatal(const char* message) {
@@ -261,6 +302,8 @@ void setup() {
   // repaint; the Router owns that decision, so hand it a hook.
   services::console::setRedrawHook(
       []() { router.invalidate(epaper::Refresh::kFull); });
+  services::console::setCanvas(&canvas);
+  services::console::setScreenHook(&openScreenByName);
 
   dashboardScreen.setMenu(&menuScreen);
   dashboardScreen.setRecorder(&recordScreen);

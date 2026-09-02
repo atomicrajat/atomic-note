@@ -146,7 +146,8 @@ is driven on or off, so a longer pulse is the only way to make a stronger one.
 
 `buzz [ms]` on the serial console pulses the motor directly, ignoring the
 preference — which is how these were found, and how to tell "too short" from
-"not wired up".
+"not wired up". It needs `config::kDevTools = true`; the bring-up commands are
+compiled out of a release build.
 
 ## The menu
 

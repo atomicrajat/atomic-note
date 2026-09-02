@@ -42,6 +42,15 @@ Add-ons hang off the same I2C bus as the RTC and the environment sensor:
 share nothing else — different register widths, different init, different API.
 The `tof` console command reads both ID schemes and says which is present.
 
+## Bring-up commands
+
+`tof`, `motion`, `dist`, `buzz`, `rail`, `rot`, `shot` and `screen` live behind
+`config::kDevTools` in `src/config.h` and are **compiled out by default**. None
+is a product feature — a shipped device has no reason to dump its framebuffer
+or drive its motor on command — but they are how every threshold in this
+project was chosen, against real hardware rather than a datasheet. Turn the
+flag on, flash, measure, turn it off.
+
 The MPU6050 is configured for **±8 g**, not the ±2 g default. A deliberate
 shake peaks well past 2 g, and at the default range every sample in the
 interesting part of the motion clips at the rail — the sensor reports the same

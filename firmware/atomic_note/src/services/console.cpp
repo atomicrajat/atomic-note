@@ -1,5 +1,7 @@
 #include "console.h"
 
+#include "../config.h"
+
 #include <Arduino.h>
 #include <SD_MMC.h>
 
@@ -35,6 +37,8 @@ namespace {
 char buffer[64];
 size_t used = 0;
 void (*onRedraw)() = nullptr;
+const gfx::Canvas* screenCanvas = nullptr;
+bool (*openScreen)(const char*) = nullptr;
 
 // Set by the encode callback so the caller can report the grid size.
 int lastQrModules = 0;
@@ -135,7 +139,48 @@ void handle(char* line) {
     }
     Serial.printf("%d device(s)\n", found);
 
-  } else if (strcmp(line, "dist") == 0) {
+  } else if (config::kDevTools && strcmp(line, "shot") == 0) {
+    // Dump the framebuffer so a screenshot can be taken without photographing
+    // the panel. Real pixels, not a mockup — which matters for documenting a
+    // 200x200 display, where a photograph of e-paper under room lighting looks
+    // nothing like what the layout actually is.
+    //
+    // Streamed as hex a row at a time rather than base64 in one string: 5000
+    // bytes is a large allocation to make on a whim, and a row per line means
+    // a truncated transfer is obvious rather than silently corrupt.
+    if (!screenCanvas) {
+      Serial.println("no canvas");
+      return;
+    }
+    const int w = screenCanvas->width();
+    const int h = screenCanvas->height();
+    const int stride = (w + 7) / 8;
+    const uint8_t* bits = screenCanvas->bits();
+    if (!bits) {
+      Serial.println("no framebuffer");
+      return;
+    }
+    Serial.printf("SHOT %d %d\n", w, h);
+    for (int y = 0; y < h; y++) {
+      for (int x = 0; x < stride; x++) {
+        Serial.printf("%02X", bits[y * stride + x]);
+      }
+      Serial.println();
+    }
+    Serial.println("ENDSHOT");
+
+  } else if (config::kDevTools && strcmp(line, "screen") == 0) {
+    // Open a screen by name, so every screen can be captured without anyone
+    // pressing buttons in the right order forty times.
+    if (!openScreen) {
+      Serial.println("no screen hook");
+      return;
+    }
+    if (!openScreen(arg && *arg ? arg : nullptr)) {
+      Serial.println("unknown screen");
+    }
+
+  } else if (config::kDevTools && strcmp(line, "dist") == 0) {
     // Live distance readings, for checking the sensor against a ruler. A
     // measuring tool has to be verified against something known, not just
     // observed to produce numbers.
@@ -155,7 +200,7 @@ void handle(char* line) {
       delay(150);
     }
 
-  } else if (strcmp(line, "tof") == 0) {
+  } else if (config::kDevTools && strcmp(line, "tof") == 0) {
     // Which time-of-flight part is on 0x29?
     //
     // The VL53L0X and the VL53L1X share an address and share nothing else —
@@ -192,7 +237,7 @@ void handle(char* line) {
       Serial.println("=> unrecognised, see the raw bytes above");
     }
 
-  } else if (strcmp(line, "motion") == 0) {
+  } else if (config::kDevTools && strcmp(line, "motion") == 0) {
     // Bring-up aid for the accelerometer. Prints live readings so a shake
     // threshold can be chosen from what the part actually reports rather than
     // from what the datasheet implies — the same reason `buzz` exists.
@@ -216,7 +261,7 @@ void handle(char* line) {
     }
     Serial.printf("peak %.2f g\n", peak);
 
-  } else if (strcmp(line, "buzz") == 0) {
+  } else if (config::kDevTools && strcmp(line, "buzz") == 0) {
     // Bring-up aid for the haptic motor. An eccentric-mass motor needs tens
     // of milliseconds to spin up, so "I felt nothing" is ambiguous between a
     // pulse that was too short and a pin with nothing on it. Sweeping the
@@ -231,7 +276,7 @@ void handle(char* line) {
     haptics::test(ms);
     Serial.println("done");
 
-  } else if (strcmp(line, "rail") == 0) {
+  } else if (config::kDevTools && strcmp(line, "rail") == 0) {
     // Bring-up aid: some peripherals only appear on the bus once their rail is
     // up, so being able to toggle them without reflashing saves a cycle.
     if (!arg || !*arg) {
@@ -254,7 +299,7 @@ void handle(char* line) {
     }
     Serial.printf("%s rail %s\n", arg, on ? "on" : "off");
 
-  } else if (strcmp(line, "rot") == 0) {
+  } else if (config::kDevTools && strcmp(line, "rot") == 0) {
     // Bring-up: step through every way the panel could be mounted. With no
     // argument it advances by one, so it can be driven blind from a terminal.
     static int index = -1;
@@ -624,6 +669,10 @@ void handle(char* line) {
 }  // namespace
 
 void setRedrawHook(void (*hook)()) { onRedraw = hook; }
+
+void setCanvas(const gfx::Canvas* canvas) { screenCanvas = canvas; }
+
+void setScreenHook(bool (*hook)(const char*)) { openScreen = hook; }
 
 void poll() {
   while (Serial.available() > 0) {

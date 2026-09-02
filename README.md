@@ -47,6 +47,53 @@ Hold a button, speak a thought or expense, and Atomic Note automatically structu
 
 ---
 
+## The Screens
+
+Every screen below is a real capture of the device's framebuffer, not a mockup
+— 200 × 200, 1-bit, shown at 2×.
+
+| | | |
+|:--:|:--:|:--:|
+| <img src="docs/screens/dashboard.png" width="200"> | <img src="docs/screens/menu.png" width="200"> | <img src="docs/screens/notes.png" width="200"> |
+| **Dashboard** — clock, date, battery, temperature and humidity | **Menu** — ordered by how often it is reached | **Notes** — recordings by tag, with counts |
+| <img src="docs/screens/ask.png" width="200"> | <img src="docs/screens/expenses.png" width="200"> | <img src="docs/screens/measure.png" width="200"> |
+| **Ask** — hold to speak, answered from your own notes | **Expenses** — the week as bars, against a budget | **Measure** — live ToF distance, freeze and convert |
+| <img src="docs/screens/dice.png" width="200"> | <img src="docs/screens/settings.png" width="200"> | <img src="docs/screens/tasks.png" width="200"> |
+| **Dice** — shake to roll, needs an MPU6050 | **Settings** — storage, sensors, options, power | **Tasks** — triage on the device |
+| <img src="docs/screens/agenda.png" width="200"> | <img src="docs/screens/timer.png" width="200"> | <img src="docs/screens/buttons.png" width="200"> |
+| **Agenda** — what is next, from your calendar feeds | **Focus Timer** — a draining ring | **Buttons** — the whole grammar, on the device |
+
+<details>
+<summary>Calendar, Links, Status Sign, Sync, WiFi, Claude Usage</summary>
+
+| | | |
+|:--:|:--:|:--:|
+| <img src="docs/screens/calendar.png" width="200"> | <img src="docs/screens/links.png" width="200"> | <img src="docs/screens/banner.png" width="200"> |
+| **Calendar** | **My Links** — QR codes | **Status Sign** |
+| <img src="docs/screens/sync.png" width="200"> | <img src="docs/screens/wifi.png" width="200"> | <img src="docs/screens/usage.png" width="200"> |
+| **Sync** | **WiFi** | **Claude Usage** |
+
+</details>
+
+### Regenerating these
+
+Photographing e-paper is a poor way to document a 200 × 200 layout — room
+lighting turns crisp 1-bit graphics grey and warped. These come straight from
+the framebuffer instead:
+
+```bash
+# set config::kDevTools = true in firmware/atomic_note/src/config.h, then
+./tools/flash.sh
+./tools/screenshot.py          # every screen, into docs/screens/
+./tools/screenshot.py ask dice # or just these
+```
+
+The device does its own navigating, so nothing needs pressing in the right
+order. **Set `kDevTools` back to `false` afterwards** — it also compiles out
+the hardware bring-up commands, which are not product features.
+
+---
+
 ## System Specifications
 
 | | |

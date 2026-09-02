@@ -135,7 +135,11 @@ void SettingsScreen::rebuild() {
       }
       char count[8];
       snprintf(count, sizeof(count), "%d", noteTotal);
-      addInfo("NOTES", String(count) + " · " + humanBytes(notesBytes));
+      // A plain comma, not a middle dot. The body face is FreeSans9pt7b, which
+  // covers ASCII 0x20-0x7E and nothing else — U+00B7 draws as a blank, so the
+  // row read "33  7.8 MB" with an unexplained gap in it. Caught by looking at
+  // a captured screenshot; on the panel at arm's length it is invisible.
+  addInfo("NOTES", String(count) + ", " + humanBytes(notesBytes));
     }
   }
 
