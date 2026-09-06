@@ -8,6 +8,34 @@ Hold a button, speak a thought or expense, and Atomic Note automatically structu
 
 ---
 
+## "But a phone already does this"
+
+The obvious objection, and a fair one. Siri and Google Assistant take dictation;
+any notes app stores it.
+
+But this was never meant to replace a phone. It is a **companion** — the same
+reason people still buy a dedicated music player, a Kindle, a UPI QR soundbox,
+or a GPS screen for the car. A phone can technically do all of those too. A
+single-purpose device removes the friction and can be shaped around one need.
+
+Three things fall out of that, and none is a feature you could add to a phone:
+
+- **Nothing you say leaves the room.** A local model never touches Siri's or
+  Gemini's servers. A phone assistant cannot offer this, because sending your
+  voice away is not a design choice it made — it is how it works.
+- **One job, weeks of battery, no notifications.** A device with a single
+  purpose and an e-ink screen that holds its image at zero power is a genuinely
+  different proposition to another icon on a home screen — including for people
+  who find juggling apps hard.
+- **It is hackable.** Plug a sensor into the I²C header and a new app appears
+  on the menu.
+
+It solves problems a phone technically can, but practically does not. And it is
+a choice — some people are happiest with one device that does everything,
+others prefer something built around a single purpose.
+
+---
+
 ## Key Features
 
 ### 🎙️ Instant Voice Capture & Offline Auto-Sync
