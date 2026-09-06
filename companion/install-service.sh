@@ -51,8 +51,20 @@ cat > "$PLIST" <<PLIST_EOF
 <dict>
   <key>Label</key><string>$LABEL</string>
 
+  <!-- caffeinate, not python, is the program launchd starts. It holds a
+       power assertion for as long as its child lives, which stops the Mac
+       idle-sleeping out from under a service the device is trying to reach.
+       -i is idle sleep, -m keeps the disk spun up; the display is left alone
+       so the screen still dims and locks normally.
+
+       What this does NOT cover is closing the lid. Clamshell sleep is a
+       separate decision macOS makes regardless of power assertions, and
+       overriding it needs root: ./tools/service.sh awake on -->
   <key>ProgramArguments</key>
   <array>
+    <string>/usr/bin/caffeinate</string>
+    <string>-i</string>
+    <string>-m</string>
     <string>$PYTHON</string>
     <string>$SCRIPT</string>
   </array>

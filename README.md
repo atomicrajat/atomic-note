@@ -135,6 +135,7 @@ the hardware bring-up commands, which are not product features.
 | **Input** | Two buttons. That is the entire input grammar |
 | **Haptics** | Vibration motor on GPIO 3 (optional, needs a driver transistor) |
 | **Power** | Li-ion with a soft-latch circuit; deep sleep between uses |
+| **Sleep** | 60 s on the dashboard; apps and menus never sleep under you |
 | **Connectivity** | Wi-Fi 802.11 b/g/n — captive-portal provisioning, no cloud account |
 
 ### Optional I²C Add-Ons
@@ -225,6 +226,31 @@ background service so it starts at login:
 ```bash
 ./companion/install-service.sh
 ```
+
+**Give it a name, not an IP.** Your router hands the host machine an address on
+a lease, and when that lease moves the device goes quiet until someone notices
+and retypes it. Enter the Bonjour name instead:
+
+```
+http://your-mac.local:8710      # `scutil --get LocalHostName` on macOS
+```
+
+The firmware resolves `.local` over mDNS at the moment it makes a request and
+caches the answer for a minute, so the address is allowed to move underneath
+it. A plain IP still works exactly as before.
+
+#### Keeping it reachable
+
+The service is only useful while the host machine is awake, and a laptop left
+alone will idle-sleep out from under it. `launchd` starts it under
+`caffeinate -i`, which holds a power assertion for as long as the service runs,
+so an open laptop sitting untouched stays reachable.
+
+A closed lid is a different matter, and the honest answer is a machine that
+does not have one — any always-on box on the same network will do.
+
+`./tools/service.sh status` shows what is running, what it is costing in RAM,
+and which models are resident.
 
 ### Where your notes go
 
