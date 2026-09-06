@@ -41,9 +41,27 @@ class Screen {
   virtual uint32_t tickIntervalMs() const { return 0; }
   virtual void onTick(Router& router) {}
 
-  // Screens that must stay awake (recording, timers, a live web server)
-  // override this so the idle timer never sleeps the device under them.
-  virtual bool blocksSleep() const { return false; }
+  // What the idle timer is allowed to do while this screen is up.
+  //
+  // Deep sleep is the whole battery story, but sleeping under someone who is
+  // still using the device costs them their place, because waking resets the
+  // chip and comes back at the dashboard. So only the screens whose job is to
+  // sit there being looked at go down directly: the dashboard, and the status
+  // sign. Everything else either holds indefinitely or, after a much longer
+  // wait, drops back to the dashboard and sleeps from there — which keeps a
+  // device abandoned in a menu from staying awake until the battery is flat.
+  enum class Idle : uint8_t {
+    kSleep,   // deep sleep after kIdleSleepMs
+    kReturn,  // fall back to the dashboard after kIdleReturnMs — the default
+    kStay,    // never time out: recording, a running timer, a live web server
+  };
+  virtual Idle idlePolicy() const { return Idle::kReturn; }
+
+  // Called immediately before the router deep-sleeps under this screen.
+  // Return true to leave this screen's own image on the glass instead of the
+  // default sleep face. The panel holds it at no cost, so a screen that exists
+  // to be read across a room wants that rather than the name of the product.
+  virtual bool onSleep(Router& router) { return false; }
 };
 
 }  // namespace ui

@@ -23,7 +23,9 @@ class SyncScreen : public ui::Screen {
   uint32_t tickIntervalMs() const override { return 300; }
   void onTick(ui::Router& router) override;
 
-  bool blocksSleep() const override { return phase_ != Phase::kDone; }
+  Idle idlePolicy() const override {
+    return phase_ != Phase::kDone ? Idle::kStay : Idle::kReturn;
+  }
 
  private:
   enum class Phase : uint8_t { kConnecting, kWorking, kDone };

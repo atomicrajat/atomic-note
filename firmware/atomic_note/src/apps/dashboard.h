@@ -28,6 +28,10 @@ class Dashboard : public ui::Screen {
   bool onEvent(ui::Router& router, input::Button button,
                input::Event event) override;
 
+  // The one screen the idle timer is allowed to sleep from. Everything else
+  // falls back to here first, so this is where every idle path ends.
+  Idle idlePolicy() const override { return Idle::kSleep; }
+
   // Tick every 5s. The screen only repaints when the displayed minute actually
   // changes, so this costs almost nothing.
   uint32_t tickIntervalMs() const override { return 5000; }

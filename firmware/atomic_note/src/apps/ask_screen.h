@@ -26,7 +26,9 @@ class AskScreen : public ui::Screen {
   uint32_t tickIntervalMs() const override { return 10; }
   void onTick(ui::Router& router) override;
 
-  bool blocksSleep() const override { return phase_ != Phase::kIdle; }
+  Idle idlePolicy() const override {
+    return phase_ != Phase::kIdle ? Idle::kStay : Idle::kReturn;
+  }
 
  private:
   enum class Phase : uint8_t {

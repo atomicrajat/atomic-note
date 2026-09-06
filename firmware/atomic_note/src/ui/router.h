@@ -9,21 +9,35 @@
 
 namespace ui {
 
-// Deep-sleep after this long with no input, unless the active screen blocks it.
+// Deep-sleep after this long with no input, on a screen whose idle policy is
+// kSleep — in practice the dashboard and the status sign.
 //
 // This is the single biggest lever on battery life, because awake current is
 // thousands of times sleep current — every second here is paid on every
 // interaction, all day. It is not set lower than this because waking resets
-// the chip and returns to the dashboard: sleeping under someone who is still
-// reading a long answer would lose their place, which is worse than the
-// milliamps are worth.
+// the chip: sleeping under someone who is still reading would lose their
+// place, which is worse than the milliamps are worth.
 constexpr uint32_t kIdleSleepMs = 60000;
+
+// On every other screen — menus, apps, results — the idle timer does not sleep
+// the device at all. It waits this much longer and then puts the dashboard
+// back, which sleeps on its own timer a minute after that.
+//
+// The split exists because the old single timer sat under the apps too, and a
+// minute is nothing while you are reading a note, picking a tag or watching a
+// distance reading settle. Long enough that no real use of an app reaches it;
+// short enough that a device left face-up on a desk still ends up asleep
+// rather than awake all night.
+constexpr uint32_t kIdleReturnMs = 300000;
 
 class Router {
  public:
   Router(gfx::Canvas& canvas) : canvas_(canvas) {}
 
-  void begin(Screen* root);
+  // `home` is where the idle timer falls back to, and defaults to the root.
+  // They differ on a reminder wake, where the device starts on the alert but
+  // still belongs back at the dashboard once it is left alone.
+  void begin(Screen* root, Screen* home = nullptr);
 
   // Replace the current screen, keeping the back-stack intact.
   void go(Screen* screen);
@@ -60,6 +74,7 @@ class Router {
 
   gfx::Canvas& canvas_;
   Screen* current_ = nullptr;
+  Screen* home_ = nullptr;
   Screen* stack_[kMaxDepth] = {};
   int depth_ = 0;
 

@@ -52,5 +52,18 @@ String portalSsid();     // the AP name, when the portal is up
 // timeout, because there is nothing useful to do until it lands.
 bool syncTime(uint32_t timeoutMs = 8000);
 
+// Rewrite a ".local" host inside `url` to the address mDNS answers with.
+//
+// This is what makes the companion address survive DHCP. A laptop's IP is a
+// lease, not a property of the laptop: it changes on its own schedule and
+// takes the device offline until someone notices and retypes it. Its Bonjour
+// name does not change, and macOS answers for it out of the box.
+//
+// Anything that is not a ".local" host comes back untouched, so a hard-coded
+// IP still works exactly as before. A lookup that fails also comes back
+// untouched — the caller's own error path then reports an unreachable service,
+// which is both true and the message the user already knows.
+String resolved(const String& url);
+
 }  // namespace network
 }  // namespace services

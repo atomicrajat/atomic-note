@@ -12,8 +12,9 @@
 
 namespace ui {
 
-void Router::begin(Screen* root) {
+void Router::begin(Screen* root, Screen* home) {
   depth_ = 0;
+  home_ = home ? home : root;
   lastInputMs_ = millis();
   enter(root);
 }
@@ -130,17 +131,41 @@ void Router::repaintIfNeeded() {
 
 void Router::sleepIfIdle() {
   if (config::kDevKeepAwake) return;
-  if (current_->blocksSleep()) {
+
+  const Screen::Idle policy = current_->idlePolicy();
+  if (policy == Screen::Idle::kStay) {
+    // Work is in flight. Hold the timer at zero rather than letting it run,
+    // so the count starts from the moment the work ends and not from the last
+    // button press before it.
     keepAwake();
     return;
   }
-  if (millis() - lastInputMs_ < kIdleSleepMs) return;
+
+  const uint32_t idleMs = millis() - lastInputMs_;
+
+  if (policy == Screen::Idle::kReturn) {
+    if (idleMs < kIdleReturnMs) return;
+    if (!home_ || current_ == home_) return;
+    // Not asleep — just back where sleeping is allowed. The whole stack goes,
+    // because coming back to a half-finished app three levels deep after five
+    // idle minutes is not where anyone left off.
+    Serial.println("[router] idle, returning home");
+    depth_ = 0;
+    enter(home_);
+    keepAwake();
+    return;
+  }
+
+  if (idleMs < kIdleSleepMs) return;
 
   // Leave the panel showing something that says "asleep, not broken". The
   // refresh costs about 1.4 s of panel current once; the image then holds for
-  // the entire sleep at no cost at all.
-  drawSleepFace(canvas_);
-  epaper::present(canvas_, epaper::Refresh::kFull);
+  // the entire sleep at no cost at all. A screen that would rather keep its
+  // own image says so and we skip the refresh entirely.
+  if (!current_->onSleep(*this)) {
+    drawSleepFace(canvas_);
+    epaper::present(canvas_, epaper::Refresh::kFull);
+  }
 
   services::enterDeepSleep();
 }

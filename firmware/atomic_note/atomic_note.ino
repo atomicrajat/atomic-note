@@ -314,7 +314,9 @@ void setup() {
   // the reason the device woke.
   if (dueIndex >= 0) {
     reminderAlertScreen.setIndex(dueIndex);
-    router.begin(&reminderAlertScreen);
+    // Home stays the dashboard: the alert is where we start, not where the
+    // device belongs once it has been left alone.
+    router.begin(&reminderAlertScreen, &dashboardScreen);
   } else {
     router.begin(&dashboardScreen);
   }
@@ -330,9 +332,11 @@ void autoSyncStep() {
   if (!services::network::isJoined()) return;
   if (services::notes::countWithoutText() == 0) return;
 
-  // Never while something is using the screen or the codec.
+  // Never while something is using the screen or the codec. kStay is exactly
+  // that set: the screens that hold the idle timer off are the ones with work
+  // in flight, and a background upload would be competing with them.
   ui::Screen* screen = router.current();
-  if (screen && screen->blocksSleep()) return;
+  if (screen && screen->idlePolicy() == ui::Screen::Idle::kStay) return;
 
   static uint32_t nextAttemptMs = 0;
   if (millis() < nextAttemptMs) return;

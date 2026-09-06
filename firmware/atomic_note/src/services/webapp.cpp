@@ -4,6 +4,7 @@
 #include <WebServer.h>
 #include <WiFi.h>
 
+#include "network.h"
 #include "settings.h"
 #include "storage.h"
 #include <SD_MMC.h>
@@ -258,10 +259,13 @@ void handleRoot() {
   // Transcription
   p += F("<div class='card'><h2>Transcription</h2>"
          "<p class='sub'>Run companion/transcribe_server.py on a machine on "
-         "this network, then paste the address it prints.</p>"
+         "this network, then paste the address it prints. A Bonjour name "
+         "&mdash; http://your-mac.local:8710 &mdash; is worth more than the "
+         "IP: it keeps working after the router hands that machine a "
+         "different address.</p>"
          "<form action='/companion' method='post'>"
          "<label>Service address</label>"
-         "<input name='url' placeholder='http://192.168.1.20:8710' value='");
+         "<input name='url' placeholder='http://your-mac.local:8710' value='");
   p += esc(settings::companionUrl());
   p += F("'><label><input type='checkbox' name='auto' style='width:auto' ");
   if (settings::autoSync()) p += F("checked");
@@ -448,7 +452,7 @@ void handleAllTranscripts() {
 // Forwards the figures the user read off Claude Code to the companion, which
 // is where the session history lives.
 void handleCalibrate() {
-  String base = settings::companionUrl();
+  String base = network::resolved(settings::companionUrl());
   base.trim();
   while (base.endsWith("/")) base.remove(base.length() - 1);
   if (base.length() == 0) {

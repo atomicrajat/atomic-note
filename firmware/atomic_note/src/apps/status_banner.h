@@ -21,6 +21,12 @@ class StatusBanner : public ui::Screen {
   bool onEvent(ui::Router& router, input::Button button,
                input::Event event) override;
 
+  // The sign sleeps like the dashboard does, and keeps itself on the glass
+  // when it goes. Holding an image costs nothing on e-paper, so a sign left
+  // on a desk stays readable for as long as the battery lasts.
+  Idle idlePolicy() const override { return Idle::kSleep; }
+  bool onSleep(ui::Router& router) override;
+
  private:
   int cursor_ = 0;
   bool committed_ = false;

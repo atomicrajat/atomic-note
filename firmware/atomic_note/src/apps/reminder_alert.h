@@ -22,7 +22,7 @@ class ReminderAlert : public ui::Screen {
                input::Event event) override;
 
   // An alert nobody has acknowledged must not sleep itself away.
-  bool blocksSleep() const override { return true; }
+  Idle idlePolicy() const override { return Idle::kStay; }
 
  private:
   int index_ = -1;

@@ -48,7 +48,7 @@ class NoteList : public ui::Screen {
   uint32_t tickIntervalMs() const override { return 20; }
   void onTick(ui::Router& router) override;
 
-  bool blocksSleep() const override;
+  Idle idlePolicy() const override;
 
  private:
   static constexpr int kRowsPerPage = 3;
@@ -83,7 +83,7 @@ class NoteDetail : public ui::Screen {
   uint32_t tickIntervalMs() const override { return 20; }
   void onTick(ui::Router& router) override;
 
-  bool blocksSleep() const override;
+  Idle idlePolicy() const override;
 
  private:
   static constexpr int kLinesPerPage = 6;

@@ -44,7 +44,8 @@ void ExpenseScreen::onExit() {
 void ExpenseScreen::fetchExpenses(ui::Router& router) {
   phase_ = Phase::kReady;
 
-  String base = services::settings::companionUrl();
+  String base =
+      services::network::resolved(services::settings::companionUrl());
   base.trim();
   while (base.endsWith("/")) base.remove(base.length() - 1);
   if (base.length() == 0) {

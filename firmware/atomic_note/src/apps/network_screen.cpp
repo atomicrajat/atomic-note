@@ -37,10 +37,11 @@ void NetworkScreen::onExit() {
   // for long by accident.
 }
 
-bool NetworkScreen::blocksSleep() const {
+ui::Screen::Idle NetworkScreen::idlePolicy() const {
   const net::State s = net::state();
-  return s == net::State::kJoining || s == net::State::kPortal ||
-         s == net::State::kJoined;
+  const bool busy = s == net::State::kJoining || s == net::State::kPortal ||
+                    s == net::State::kJoined;
+  return busy ? Idle::kStay : Idle::kReturn;
 }
 
 void NetworkScreen::onTick(ui::Router& router) {

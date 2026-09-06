@@ -158,7 +158,11 @@ void NoteList::onExit() {
   playingIndex_ = -1;
 }
 
-bool NoteList::blocksSleep() const { return audio::player::active(); }
+ui::Screen::Idle NoteList::idlePolicy() const {
+  // Playback outlives the idle timer easily; sleeping mid-note would
+  // cut it off and reset the chip.
+  return audio::player::active() ? Idle::kStay : Idle::kReturn;
+}
 
 void NoteList::onTick(ui::Router& router) {
   if (!audio::player::active()) return;
@@ -297,7 +301,11 @@ void NoteDetail::onExit() {
   playing_ = false;
 }
 
-bool NoteDetail::blocksSleep() const { return audio::player::active(); }
+ui::Screen::Idle NoteDetail::idlePolicy() const {
+  // Playback outlives the idle timer easily; sleeping mid-note would
+  // cut it off and reset the chip.
+  return audio::player::active() ? Idle::kStay : Idle::kReturn;
+}
 
 void NoteDetail::onTick(ui::Router& router) {
   if (!audio::player::active()) return;

@@ -31,7 +31,9 @@ class Pomodoro : public ui::Screen {
 
   // A running timer must not be slept out from under the user. A paused one
   // may sleep — it is holding a number, not counting.
-  bool blocksSleep() const override { return state_ == State::kRunning; }
+  Idle idlePolicy() const override {
+    return state_ == State::kRunning ? Idle::kStay : Idle::kReturn;
+  }
 
  private:
   enum class State : uint8_t { kIdle, kRunning, kPaused, kDone };

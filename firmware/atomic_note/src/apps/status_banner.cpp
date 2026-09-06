@@ -87,16 +87,26 @@ bool StatusBanner::onEvent(ui::Router& router, input::Button button,
   }
 
   if (button == input::Button::kA && event == input::Event::kLongPress) {
-    // Redraw without the chrome, then sleep. The panel holds the image with no
-    // power, so the sign stays up until someone presses a button.
-    committed_ = true;
-    router.invalidate(epaper::Refresh::kFull);
-    router.flushPendingPaint();
+    // Commit now rather than waiting out the idle timer. Same ending either
+    // way — the router calls onSleep() below when the timer gets there.
+    onSleep(router);
     services::enterDeepSleep();
     return true;
   }
 
   return false;
+}
+
+bool StatusBanner::onSleep(ui::Router& router) {
+  // Drop the chrome and repaint before the chip goes down, so what the panel
+  // holds is the sign itself and not the sign plus a picker nobody is using.
+  // Returning true tells the router to leave this on the glass instead of
+  // painting the ATOMIC NOTE sleep face over it — which is the whole point of
+  // the feature: you set a sign, walk away, and it is still there.
+  committed_ = true;
+  router.invalidate(epaper::Refresh::kFull);
+  router.flushPendingPaint();
+  return true;
 }
 
 }  // namespace apps

@@ -24,7 +24,7 @@ class NetworkScreen : public ui::Screen {
   void onTick(ui::Router& router) override;
 
   // Connecting and serving the portal both need the loop running.
-  bool blocksSleep() const override;
+  Idle idlePolicy() const override;
 
  private:
   int shownState_ = -1;

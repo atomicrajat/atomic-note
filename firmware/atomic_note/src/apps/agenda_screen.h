@@ -27,7 +27,9 @@ class AgendaScreen : public ui::Screen {
   uint32_t tickIntervalMs() const override { return 400; }
   void onTick(ui::Router& router) override;
 
-  bool blocksSleep() const override { return phase_ != Phase::kReady; }
+  Idle idlePolicy() const override {
+    return phase_ != Phase::kReady ? Idle::kStay : Idle::kReturn;
+  }
 
  private:
   enum class Phase : uint8_t { kConnecting, kFetching, kReady };

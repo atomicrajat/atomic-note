@@ -115,7 +115,8 @@ void AskScreen::sendQuestion(ui::Router& router) {
     return;
   }
 
-  String base = services::settings::companionUrl();
+  String base =
+      services::network::resolved(services::settings::companionUrl());
   base.trim();
   while (base.endsWith("/")) base.remove(base.length() - 1);
   if (base.length() == 0) {
@@ -199,7 +200,8 @@ void AskScreen::sendQuestion(ui::Router& router) {
 void AskScreen::speakAnswer() {
   if (answer_.length() == 0 || !net::isJoined()) return;
 
-  String base = services::settings::companionUrl();
+  String base =
+      services::network::resolved(services::settings::companionUrl());
   base.trim();
   while (base.endsWith("/")) base.remove(base.length() - 1);
   if (base.length() == 0) return;

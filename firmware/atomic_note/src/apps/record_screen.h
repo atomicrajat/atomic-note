@@ -26,7 +26,7 @@ class RecordScreen : public ui::Screen {
   uint32_t tickIntervalMs() const override { return 10; }
   void onTick(ui::Router& router) override;
 
-  bool blocksSleep() const override { return true; }
+  Idle idlePolicy() const override { return Idle::kStay; }
 
  private:
   enum class Phase : uint8_t { kArming, kRecording, kTagging, kFailed };

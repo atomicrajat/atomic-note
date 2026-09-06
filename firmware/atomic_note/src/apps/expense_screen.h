@@ -12,7 +12,9 @@ class ExpenseScreen : public ui::Screen {
   const char* name() const override { return "Expenses"; }
 
   uint32_t tickIntervalMs() const override { return 200; }
-  bool blocksSleep() const override { return phase_ != Phase::kReady; }
+  Idle idlePolicy() const override {
+    return phase_ != Phase::kReady ? Idle::kStay : Idle::kReturn;
+  }
 
   void onEnter(ui::Router& router) override;
   void onExit() override;

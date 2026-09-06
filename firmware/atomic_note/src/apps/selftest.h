@@ -23,7 +23,7 @@ class SelfTest : public ui::Screen {
   // Bring-up only: sleeping drops the native USB CDC, which makes the board
   // vanish from /dev mid-session and blocks reflashing. The dashboard that
   // replaces this screen will sleep normally.
-  bool blocksSleep() const override { return true; }
+  Idle idlePolicy() const override { return Idle::kStay; }
 
  private:
   int orientationIndex_ = 3;  // matches epaper::kDefaultOrientation

@@ -75,9 +75,13 @@ bool removeTag(int index);
 String deviceName();
 void setDeviceName(const char* name);
 
-// Base URL of the transcription companion, e.g. http://192.168.1.20:8710
+// Base URL of the transcription companion, e.g. http://your-mac.local:8710
 // When set, notes are transcribed on their own whenever the device already
 // happens to have a network — no menu trip needed.
+//
+// Stored exactly as typed. A ".local" host is resolved at the point of use by
+// network::resolved(), so this getter is the value to show in a form and the
+// wrong thing to hand to HTTPClient.
 bool autoSync();
 void setAutoSync(bool on);
 

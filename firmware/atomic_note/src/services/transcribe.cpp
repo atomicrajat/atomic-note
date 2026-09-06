@@ -25,7 +25,7 @@ namespace {
 constexpr uint16_t kTimeoutMs = 65000;
 
 String endpoint(const char* path) {
-  String base = settings::companionUrl();
+  String base = network::resolved(settings::companionUrl());
   base.trim();
   if (base.length() == 0) return String("");
   while (base.endsWith("/")) base.remove(base.length() - 1);

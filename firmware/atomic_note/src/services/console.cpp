@@ -578,7 +578,7 @@ void handle(char* line) {
       Serial.println("usage: speak <text>");
       return;
     }
-    String base = settings::companionUrl();
+    String base = network::resolved(settings::companionUrl());
     base.trim();
     while (base.endsWith("/")) base.remove(base.length() - 1);
     if (base.length() == 0) {
